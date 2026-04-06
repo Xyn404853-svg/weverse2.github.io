@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Weverse · 在你身边，不止舞台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans CJK SC","PingFang SC",sans-serif;
+      background: #050814;
+      color: #f5f5f5;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* 全局布局 */
+    .container { width: 90%; max-width: 1120px; margin: 0 auto; }
+    section { padding: 60px 0; }
+
+    /* 顶部导航 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(5,8,20,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #56e6ff;
+    }
+    .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #56e6ff; }
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-size: 14px;
+      color: #c9d1ff;
+    }
+    .nav-links a:hover { color: #ffffff; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg,#00e0ff,#8a7bff);
+      color: #050814;
+      font-weight: 600;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-outline {
+      background: transparent;
+      border-color: rgba(255,255,255,0.25);
+      color: #e2e8f0;
+    }
+    .btn-outline:hover {
+      border-color: #56e6ff;
+      color: #ffffff;
+    }
+    .lang-switch {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 12px;
+      color: #a0aec0;
+    }
+
+    /* Hero 区 */
+    .hero {
+      min-height: 75vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+    .hero-title {
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg,#ffffff,#89f7ff,#cf9bff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 16px;
+      color: #c9d1ff;
+      max-width: 420px;
+      margin-bottom: 24px;
+    }
+    .hero-cta { display: flex; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(86,230,255,0.08);
+      border: 1px solid rgba(86,230,255,0.2);
+      color: #9ae6ff;
+    }
+
+    .hero-right {
+      position: relative;
+      padding: 18px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top,#182847,#050814);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.8);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-phone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: #a0aec0;
+    }
+    .hero-chat-window {
+      background: rgba(5,8,20,0.9);
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+      height: 260px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chat-row { display: flex; gap: 8px; font-size: 13px; }
+    .chat-row.user { justify-content: flex-end; }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      line-height: 1.4;
+    }
+    .chat-bubble-user {
+      background: linear-gradient(135deg,#00e0ff,#8a7bff);
+      color: #050814;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-bubble-ai {
+      background: rgba(148,163,255,0.18);
+      color: #e2e8f0;
+      border-bottom-left-radius: 2px;
+    }
+    .chat-meta {
+      font-size: 11px;
+      color: #718096;
+      margin-top: -4px;
+    }
+    .chat-input-bar {
+      margin-top: auto;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(15,23,42,0.95);
+      color: #e2e8f0;
+    }
+
+    /* 功能亮点条 */
+    .highlights {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+    }
+    .highlight-card {
+      background: radial-gradient(circle at top,#151633,#050814);
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .highlight-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #e5e7ff;
+    }
+    .highlight-desc {
+      font-size: 12px;
+      color: #a0aec0;
+    }
+
+    /* 区块标题 */
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .section-subtitle {
+      font-size: 13px;
+      color: #a0aec0;
+      margin-bottom: 24px;
+    }
+
+    /* 我的关注 */
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0,2fr) minmax(0,1fr);
+      gap: 24px;
+    }
+    .card {
+      background: radial-gradient(circle at top,#151633,#050814);
+      border-radius: 18px;
+      padding: 16px 18px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(86,230,255,0.1);
+      color: #9ae6ff;
+    }
+    .feed-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-meta {
+      font-size: 11px;
+      color: #718096;
+      margin-bottom: 4px;
+    }
+    .feed-title {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .feed-text {
+      font-size: 12px;
+      color: #cbd5f5;
+    }
+
+    /* 三卡入口区 */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 20px;
+    }
+    .cta-card {
+      background: radial-gradient(circle at top,#161b41,#050814);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 150px;
+    }
+    .cta-card h3 { font-size: 16px; margin-bottom: 6px; }
+    .cta-card p { font-size: 13px; color: #a0aec0; margin-bottom: 12px; }
+
+    /* 粉丝互动中心 */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .tab {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      color: #a0aec0;
+    }
+    .tab.active {
+      background: linear-gradient(135deg,#00e0ff,#8a7bff);
+      border-color: transparent;
+      color: #050814;
+      font-weight: 600;
+    }
+    .activity-list { display: grid; gap: 12px; }
+    .activity-card {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,255,0.25);
+      font-size: 13px;
+    }
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(138,129,255,0.15);
+      color: #e5e7ff;
+    }
+    .progress-bar {
+      margin-top: 6px;
+      height: 6px;
+      background: rgba(45,55,72,0.9);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-inner {
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg,#00e0ff,#8a7bff);
+    }
+    .task-list { display: grid; gap: 10px; font-size: 13px; }
+
+    /* Shop 概览 */
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0,1fr);
+      gap: 20px;
+    }
+    .filter-title { font-size: 13px; margin-bottom: 8px; color: #a0aec0; }
+    .filter-group { margin-bottom: 14px; }
+    .filter-label {
+      font-size: 12px;
+      color: #a0aec0;
+      margin-bottom: 4px;
+    }
+    .filter-pill {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 11px;
+      cursor: pointer;
+      color: #cbd5f5;
+    }
+    .filter-pill.active {
+      background: rgba(86,230,255,0.18);
+      border-color: #56e6ff;
+      color: #e6f9ff;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+    }
+    .product-card {
+      background: rgba(15,23,42,0.9);
+      border-radius: 14px;
+      padding: 10px 11px;
+      border: 1px solid rgba(148,163,255,0.25);
+      font-size: 12px;
+    }
+    .product-title { margin: 6px 0 2px; }
+    .product-price { color: #9ae6ff; font-weight: 600; font-size: 13px; }
+    .product-meta { color: #718096; font-size: 11px; }
+
+    /* AI 陪伴页面 */
+    .ai-layout {
+      display: grid;
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+      gap: 20px;
+    }
+    .ai-note {
+      font-size: 11px;
+      color: #a0aec0;
+      margin-top: 6px;
+    }
+    .ai-feature-list { display: grid; gap: 12px; font-size: 13px; }
+    .ai-feature-card {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,255,0.25);
+    }
+    .ai-feature-title { font-weight: 600; margin-bottom: 2px; }
+
+    /* 弹窗广告 */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .popup {
+      width: 300px;
+      background: radial-gradient(circle at top,#2d1b50,#050814);
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      font-size: 13px;
+      position: relative;
+    }
+    .popup-close {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      color: #cbd5f5;
+    }
+    .popup-tag {
+      font-size: 11px;
+      color: #9ae6ff;
+      margin-bottom: 6px;
+    }
+    .popup-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .popup-subtitle {
+      font-size: 12px;
+      color: #e2e8f0;
+      margin-bottom: 12px;
+    }
+    .popup-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #a0aec0;
+    }
+
+    /* 页脚 */
+    footer {
+      padding: 24px 0 30px;
+      font-size: 11px;
+      color: #718096;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 40px;
+    }
+
+    /* 响应式 */
+    @media (max-width: 960px) {
+      .hero-inner,
+      .dashboard,
+      .shop-layout,
+      .ai-layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+      .hero { padding-top: 20px; }
+      .hero-right { margin-top: 10px; }
+      .product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .grid-3 { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .highlights { grid-template-columns: minmax(0,1fr); }
+      .product-grid { grid-template-columns: minmax(0,1fr); }
+      .grid-3 { grid-template-columns: minmax(0,1fr); }
+      section { padding: 40px 0; }
+      .hero-title { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <span>Weverse</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#home">首页</a>
+      <a href="#community">社区</a>
+      <a href="#fandom">粉丝互动中心</a>
+      <a href="#shop">Weverse Shop</a>
+      <a href="#ai">AI 陪伴</a>
+      <a href="#help">帮助中心</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">中 / EN</div>
+      <button class="btn btn-outline">登录</button>
+      <button class="btn btn-primary">注册</button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section id="home" class="hero">
+  <div class="container hero-inner">
+    <div>
+      <h1 class="hero-title">在你身边，不止舞台</h1>
+      <p class="hero-subtitle">
+        通过 AI 虚拟陪伴和个性化社区体验，让你与偶像、与同好之间的每一次互动都更真实、更贴近生活。
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary">立即体验 AI 陪伴</button>
+        <button class="btn btn-outline">浏览粉丝故事</button>
+      </div>
+      <div class="hero-badges">
+        <div class="badge">AI 虚拟陪伴助手（测试版）</div>
+        <div class="badge">本地化行程提醒 · 北京 / 香港时区</div>
+        <div class="badge">粉丝任务 & 数字徽章体系</div>
+      </div>
+
+      <div class="highlights">
+        <div class="highlight-card">
+          <div class="highlight-title">24/7 专属陪伴</div>
+          <div class="highlight-desc">
+            基于艺人公开内容和平台数据训练的 AI 助手，用熟悉的语气陪你聊天、打气、规划追星日程。
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-title">本地化日程 & 打榜指南</div>
+          <div class="highlight-desc">
+            自动换算为你所在时区的直播和活动时间，一键获取打榜教学，不再错过每一次重要瞬间。
+          </div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-title">粉丝互动中心</div>
+          <div class="highlight-desc">
+            官方投票、应援项目、粉丝二创展区集中在一个入口，提升可寻性和参与感。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-phone-header">
+        <span>AI 智旻 · 测试版</span>
+        <span>在线 · 24/7</span>
+      </div>
+      <div class="hero-chat-window">
+        <div class="chat-row user">
+          <div class="chat-bubble chat-bubble-user">
+            今天有点丧，考试好像考砸了……
+          </div>
+        </div>
+        <div class="chat-meta" style="text-align:right;">你 · 刚刚</div>
+
+        <div class="chat-row">
+          <div class="chat-bubble chat-bubble-ai">
+            我看到你已经很努力了。<br/>
+            我也经历过很多次失败，我们一起再试一次，好吗？<br/><br/>
+            要不要我给你安排一首打气歌单？
+          </div>
+        </div>
+        <div class="chat-meta">AI 智旻 · 刚刚</div>
+
+        <div class="chat-row user">
+          <div class="chat-bubble chat-bubble-user">
+            那 XX 下周有什么活动？我不想错过。
+          </div>
+        </div>
+        <div class="chat-meta" style="text-align:right;">你 · 刚刚</div>
+
+        <div class="chat-row">
+          <div class="chat-bubble chat-bubble-ai">
+            下周三晚 8:00（已按你的时区换算），XX 会有一场特别直播。<br/>
+            需要我提前 15 分钟提醒你吗？
+          </div>
+        </div>
+        <div class="chat-meta">AI 智旻 · 刚刚</div>
+
+        <div class="chat-input-bar">
+          <input class="chat-input" placeholder="和 AI 智旻说点什么…" />
+          <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;">发送</button>
+        </div>
+      </div>
+      <div class="ai-note">
+        本功能基于 AI 生成内容，仅供娱乐使用，回复不代表艺人本人立场。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 我的关注 / 个性化首页 -->
+<section id="community">
+  <div class="container">
+    <h2 class="section-title">我的 Weverse 首页</h2>
+    <p class="section-subtitle">
+      登录后，我们会根据你关注的艺人、所在时区与常用语言，生成专属的个性化首页。
+    </p>
+    <div class="dashboard">
+      <div class="card">
+        <div class="card-header">
+          <span>关注艺人最新动态</span>
+          <span class="pill">为你推荐排序</span>
+        </div>
+        <div class="feed-item">
+          <div class="feed-meta">BTS · 官方 · 5 分钟前 · 公告</div>
+          <div class="feed-title">[行程] 香港特别粉丝见面会预告</div>
+          <div class="feed-text">
+            已根据你的位置转换为北京时间：3 月 28 日（周六） 19:30，现场福利与线上直播同步进行。
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-meta">NewJeans · 社区 · 23 分钟前</div>
+          <div class="feed-title">[自拍] 今天的练习室日常 ✨</div>
+          <div class="feed-text">
+            “练习到很晚，但想到有你们在就不觉得累了。” —— 立即查看完整视频。
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-meta">平台推荐话题 · 热门 · #新歌打榜</div>
+          <div class="feed-title">打榜教程合集（由 AI 助手整理）</div>
+          <div class="feed-text">
+            针对你关注的艺人，AI 自动汇总了最新的打榜规则、链接和注意事项，一键收藏。
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span>今日行程 · 已按北京时间显示</span>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">今晚 20:00 · XX 新歌倒计时直播</div>
+          <div class="feed-text">
+            提前 10 分钟进入房间与全球粉丝一起倒数。<br/>
+            <a href="#ai" style="color:#9ae6ff;text-decoration:underline;">让 AI 助手提醒我</a>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">本周任务进度</div>
+          <div class="feed-text">
+            · 参与 3 次社区讨论（2/3）<br/>
+            · 完成一次投票应援（0/1）<br/>
+            完成后将解锁新的 AI 语音包。
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-title">正在热议</div>
+          <div class="feed-text">
+            #新歌首舞台 #香港场应援计划 #午休和 AI 聊天的日常
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section style="padding-top:40px;">
+      <h3 class="section-title" style="font-size:20px;">一站式入口</h3>
+      <p class="section-subtitle">
+        针对现有信息架构分散的问题，我们在首页中部设置三个清晰入口，提升可寻性。
+      </p>
+      <div class="grid-3">
+        <div class="cta-card">
+          <div>
+            <h3>社区动态</h3>
+            <p>实时追踪偶像官方更新与粉丝分享，按你关注的艺人优先展示。</p>
+          </div>
+          <button class="btn btn-outline">进入社区</button>
+        </div>
+        <div class="cta-card">
+          <div>
+            <h3>粉丝互动中心</h3>
+            <p>投票、应援、任务与二创展示集中在一个入口，不再来回切换。</p>
+          </div>
+          <button class="btn btn-outline">加入应援</button>
+        </div>
+        <div class="cta-card">
+          <div>
+            <h3>Weverse Shop</h3>
+            <p>官方周边、数字商品与限时活动，支持香港 / 内地配送与本地货币显示。</p>
+          </div>
+          <button class="btn btn-outline">去逛逛</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- 粉丝互动中心 -->
+<section id="fandom">
+  <div class="container">
+    <h2 class="section-title">粉丝互动中心</h2>
+    <p class="section-subtitle">
+      解决粉丝互动单向、门槛高的问题，打造普惠、好玩的日常互动空间。
+    </p>
+
+    <div class="tabs">
+      <div class="tab active">应援 & 投票</div>
+      <div class="tab">粉丝任务 & 徽章</div>
+      <div class="tab">二创展区</div>
+    </div>
+
+    <div class="dashboard">
+      <div class="card">
+        <div class="card-header">
+          <span>正在进行的应援项目</span>
+          <span style="font-size:11px;color:#a0aec0;">为你推荐 · 香港 / 内地优先</span>
+        </div>
+        <div class="activity-list">
+          <div class="activity-card">
+            <div class="activity-header">
+              <div>
+                <div style="font-weight:600;">XX 回归打歌节目应援</div>
+                <div class="feed-meta">目标：节目现场应援 + 大屏广告位</div>
+              </div>
+              <span class="tag">进行中 · 7 天</span>
+            </div>
+            <div class="feed-text">
+              你的应援记录会同步到个人档案，并影响 AI 助手为你推荐的内容。
+            </div>
+            <div class="progress-bar">
+              <div class="progress-inner"></div>
+            </div>
+            <div class="feed-meta" style="margin-top:4px;">进度：68% · 已有 12,430 位粉丝参与</div>
+          </div>
+
+          <div class="activity-card">
+            <div class="activity-header">
+              <div>
+                <div style="font-weight:600;">香港场线下应援计划投票</div>
+                <div class="feed-meta">选择你想看到的应援形式</div>
+              </div>
+              <span class="tag">投票 · 剩余 2 天</span>
+            </div>
+            <div class="feed-text">
+              A. 应援灯海方案 · B. 手幅应援 · C. 应援口号接力。
+            </div>
+            <button class="btn btn-primary" style="margin-top:10px;padding:6px 14px;font-size:12px;">
+              去投票
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span>粉丝任务 & 徽章</span>
+        </div>
+        <div class="task-list">
+          <div>
+            <div class="feed-title">本周社区活跃任务</div>
+            <div class="feed-text">
+              · 参与 3 条讨论回复<br/>
+              · 点赞 10 条其他粉丝的帖子<br/>
+              完成后可解锁「夜聊限定语音包」。
+            </div>
+          </div>
+          <div>
+            <div class="feed-title">直播互动任务</div>
+            <div class="feed-text">
+              在下一场直播中发送至少 5 条弹幕评论，解锁「直播勋章」并提升 AI 助手与你的默契值。
+            </div>
+          </div>
+          <div>
+            <div class="feed-title">二创挑战</div>
+            <div class="feed-text">
+              上传你的应援海报或视频，有机会出现在首页「粉丝二创展区」，被官方转发展示。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Weverse Shop 概览 -->
+<section id="shop">
+  <div class="container">
+    <h2 class="section-title">Weverse Shop · 官方商城</h2>
+    <p class="section-subtitle">
+      优化信息架构与本地化体验，解决原有入口不清晰、信息难找的问题。
+    </p>
+
+    <div class="shop-layout">
+      <div class="card">
+        <div class="filter-title">筛选与导航</div>
+
+        <div class="filter-group">
+          <div class="filter-label">艺人</div>
+          <div>
+            <span class="filter-pill active">全部</span>
+            <span class="filter-pill">BTS</span>
+            <span class="filter-pill">NewJeans</span>
+            <span class="filter-pill">SEVENTEEN</span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">商品分类</div>
+          <div>
+            <span class="filter-pill">专辑</span>
+            <span class="filter-pill">写真</span>
+            <span class="filter-pill active">周边</span>
+            <span class="filter-pill">服饰</span>
+            <span class="filter-pill">数字商品</span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">价格区间</div>
+          <div>
+            <span class="filter-pill">$0 - $199</span>
+            <span class="filter-pill active">$200 - $499</span>
+            <span class="filter-pill">$500+</span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">配送地区</div>
+          <div>
+            <span class="filter-pill active">香港</span>
+            <span class="filter-pill">中国内地</span>
+          </div>
+        </div>
+
+        <p style="font-size:11px;color:#a0aec0;margin-top:6px;">
+          商品价格已自动换算为 HKD / CNY，你也可以在右上角切换地区。
+        </p>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header" style="margin-bottom:0;">
+            <span>推荐给你</span>
+            <span style="font-size:11px;color:#a0aec0;">按你的关注与浏览记录排序</span>
+          </div>
+        </div>
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="tag" style="display:inline-block;margin-bottom:4px;">限时</div>
+            <div class="product-title">XX 演唱会官方应援灯（香港限定版）</div>
+            <div class="product-price">HKD 299</div>
+            <div class="product-meta">
+              库存充足 · 支持 3–5 个工作日送达
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-title">NewJeans 新专辑 限量摄影集套装</div>
+            <div class="product-price">HKD 420</div>
+            <div class="product-meta">
+              含随机小卡 · 预售，预计 4 月发货
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="tag" style="display:inline-block;margin-bottom:4px;">数字</div>
+            <div class="product-title">数字签名卡 · 仅限 AI 体验官解锁</div>
+            <div class="product-price">HKD 99</div>
+            <div class="product-meta">
+              完成 AI 互动任务后可购买 · 不占实体库存
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size:11px;color:#718096;margin-top:10px;">
+          价格已按你的地区自动换算。你可以在结算页面查看详细运费与税费说明。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI 陪伴 -->
+<section id="ai">
+  <div class="container">
+    <h2 class="section-title">AI 虚拟陪伴助手</h2>
+    <p class="section-subtitle">
+      将 AI 技术融入追星日常，既提供情感陪伴，也帮助你更高效地获取行程和打榜信息。
+    </p>
+
+    <div class="ai-layout">
+      <div class="card">
+        <div class="card-header">
+          <span>聊天界面示意</span>
+          <span style="font-size:11px;color:#a0aec0;">网站内固定浮动按钮入口</span>
+        </div>
+        <div class="hero-chat-window">
+          <div class="chat-row user">
+            <div class="chat-bubble chat-bubble-user">
+              帮我整理一下下周所有和 XX 相关的活动吧。
+            </div>
+          </div>
+          <div class="chat-meta" style="text-align:right;">你 · 1 分钟前</div>
+
+          <div class="chat-row">
+            <div class="chat-bubble chat-bubble-ai">
+              好的，我已经根据你的时区整理好：<br/>
+              · 周三 20:00 新歌倒计时直播<br/>
+              · 周五 19:30 音乐节目首舞台<br/>
+              · 周日 21:00 粉丝线上见面会<br/><br/>
+              需要我为你全部设置提醒吗？
+            </div>
+          </div>
+          <div class="chat-meta">AI 助手 · 1 分钟前</div>
+
+          <div class="chat-row user">
+            <div class="chat-bubble chat-bubble-user">
+              好啊，提前 15 分钟提醒我就行。
+            </div>
+          </div>
+          <div class="chat-meta" style="text-align:right;">你 · 刚刚</div>
+
+          <div class="chat-row">
+            <div class="chat-bubble chat-bubble-ai">
+              已为你全部设置好提醒，还顺便为每个活动匹配了对应的打榜任务。<br/>
+              完成任务还能解锁新徽章和 AI 语音。
+            </div>
+          </div>
+          <div class="chat-meta">AI 助手 · 刚刚</div>
+
+          <div class="chat-input-bar">
+            <input class="chat-input" placeholder="试着问：‘今天有什么推荐的应援任务？’" />
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;">发送</button>
+          </div>
+        </div>
+        <div class="ai-note">
+          * AI 仅基于平台公开信息生成回复，不会泄露你的个人隐私信息。你可以随时在设置中删除历史记录。
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span>核心功能说明</span>
+        </div>
+        <div class="ai-feature-list">
+          <div class="ai-feature-card">
+            <div class="ai-feature-title">情感陪伴</div>
+            <div>
+              根据你分享的心情，为你提供安慰和鼓励，引用艺人曾说过的公开话语，增强“被理解”的感觉。
+            </div>
+          </div>
+          <div class="ai-feature-card">
+            <div class="ai-feature-title">行程 & 打榜助手</div>
+            <div>
+              整合官方行程、回归预告和各平台打榜规则，一句话即可获取完整攻略，并生成可勾选任务清单。
+            </div>
+          </div>
+          <div class="ai-feature-card">
+            <div class="ai-feature-title">个性化解锁机制</div>
+            <div>
+              随着你在社区、应援和 Shop 的活跃度提升，逐步解锁更多 AI 语音、专属回复和数字周边，鼓励良性参与。
+            </div>
+          </div>
+          <div class="ai-feature-card">
+            <div class="ai-feature-title">多语言 & 本地化支持</div>
+            <div>
+              支持简体 / 繁体 / 英文，系统会自动根据你的地区和语言偏好优化回复内容和活动推荐。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 帮助中心 / 底部横幅 -->
+<section id="help">
+  <div class="container">
+    <h2 class="section-title">帮助中心 · 新手指南</h2>
+    <p class="section-subtitle">
+      针对香港与内地用户，提供本地化的注册指引、支付指南与 AI 使用说明。
+    </p>
+
+    <div class="card">
+      <div class="feed-item">
+        <div class="feed-title">如何开始使用 AI 虚拟陪伴助手？</div>
+        <div class="feed-text">
+          注册并完成基础设置后，点击页面右下角的“AI 陪伴”悬浮按钮，即可与助手开始聊天。
+        </div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-title">如何切换语言与时区？</div>
+        <div class="feed-text">
+          在右上角点击语言切换，在“我的设置”中选择所在地区，我们会自动为你换算活动时间。
+        </div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-title">支付与配送问题</div>
+        <div class="feed-text">
+          我们支持常见国际支付方式以及部分本地支付渠道，商品支持寄送至香港和中国内地。
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <span>本月重点活动 · 横幅示意</span>
+      </div>
+      <div style="padding:12px 0;">
+        <div style="
+          width:100%;
+          height:120px;
+          border-radius:16px;
+          background: linear-gradient(135deg,#2d1b50,#0b1220);
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:16px 20px;
+        ">
+          <div>
+            <div style="font-size:12px;color:#9ae6ff;margin-bottom:4px;">本月限定 · AI 陪伴体验官</div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:6px;">
+              提前解锁你的专属 AI 互动体验
+            </div>
+            <div style="font-size:12px;color:#e2e8f0;margin-bottom:10px;">
+              参与测试即可优先试用最新功能，并获得专属数字徽章和限定内容。
+            </div>
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;">立即报名</button>
+          </div>
+          <div style="font-size:11px;color:#a0aec0;text-align:right;">
+            * AI generated content<br/>
+            视觉与对话内容为 AI 生成示意。
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <div>© 2026 Weverse 数字体验概念站点 · 学术作业原型</div>
+      <div>本页面部分文案与视觉为 AI 生成示意，不代表品牌官方立场。</div>
+    </div>
+  </div>
+</footer>
+
+<!-- 弹窗广告示意 -->
+<div class="popup-overlay" id="popup">
+  <div class="popup">
+    <div class="popup-close" onclick="document.getElementById('popup').style.display='none';">×</div>
+    <div class="popup-tag">本月限定活动</div>
+    <div class="popup-title">招募「AI 陪伴体验官」</div>
+    <div class="popup-subtitle">
+      提前体验 AI 虚拟陪伴助手，获得专属数字徽章与隐藏互动内容。
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:6px;">立即报名</button>
+    <button class="btn btn-outline" style="width:100%;font-size:12px;">稍后再说</button>
+    <div class="popup-footer">
+      <span>* AI generated content</span>
+      <span>登录后不再重复弹出</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
